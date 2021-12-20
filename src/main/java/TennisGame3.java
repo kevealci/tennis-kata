@@ -1,35 +1,66 @@
 
 public class TennisGame3 implements TennisGame {
     
-    private int p2;
-    private int p1;
-    private String p1N;
-    private String p2N;
+    private int scorePlayer2;
+    private int scorePlayer1;
+    private final String player1Name;
+    private final String player2Name;
 
-    public TennisGame3(String p1N, String p2N) {
-        this.p1N = p1N;
-        this.p2N = p2N;
+    public TennisGame3(String player1Name, String player2Name) {
+        this.player1Name = player1Name;
+        this.player2Name = player2Name;
     }
 
     public String getScore() {
-        String s;
-        if (p1 < 4 && p2 < 4 && !(p1 + p2 == 6)) {
-            String[] p = new String[]{"Love", "Fifteen", "Thirty", "Forty"}; 
-            s = p[p1];
-            return (p1 == p2) ? s + "-All" : s + "-" + p[p2];
-        } else {
-            if (p1 == p2)
+        if (scoreIsLowerThan4())
+            return lowerThan4();
+        else if (isScoreEqual())
                 return "Deuce";
-            s = p1 > p2 ? p1N : p2N;
-            return ((p1-p2)*(p1-p2) == 1) ? "Advantage " + s : "Win for " + s;
+        else{
+            return greaterThan4();
         }
     }
-    
+
+    private boolean isScoreEqual() {
+        return scorePlayer1 == scorePlayer2;
+    }
+
+    private boolean scoreIsLowerThan4() {
+        return bothScoreLowerThan4() && additionDifferentTo6();
+    }
+
+    private boolean additionDifferentTo6() {
+        return scorePlayer1 + scorePlayer2 != 6;
+    }
+
+    private boolean bothScoreLowerThan4() {
+        return scorePlayer1 < 4 && scorePlayer2 < 4;
+    }
+
+    private String playerName() {
+        return  scorePlayer1 > scorePlayer2 ? player1Name : player2Name;
+    }
+
+    private String greaterThan4() {
+        return scoreAdvantageOrWin() ? "Advantage " + playerName() : "Win for " + playerName();
+    }
+
+    private boolean scoreAdvantageOrWin() {
+        return (scorePlayer1 - scorePlayer2)*(scorePlayer1 - scorePlayer2) == 1;
+    }
+
+    private String lowerThan4() {
+        String s;
+        String[] p = new String[]{"Love", "Fifteen", "Thirty", "Forty"};
+        s = p[scorePlayer1];
+        return (isScoreEqual()) ? s + "-All" : s + "-" + p[scorePlayer2];
+    }
+
     public void wonPoint(String playerName) {
-        if (playerName == "player1")
-            this.p1 += 1;
+        if (playerName.equals(player1Name))
+            this.scorePlayer1 ++;
         else
-            this.p2 += 1;
+            this.scorePlayer2 ++;
         
     }
 
